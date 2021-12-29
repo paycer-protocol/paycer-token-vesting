@@ -19,7 +19,7 @@ const defaultConfig = {
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.0",
+    version: "0.8.3",
     settings: {
       optimizer: {
         enabled: true,
@@ -38,6 +38,7 @@ const config: HardhatUserConfig = {
       url: 'https://polygon-mainnet.g.alchemy.com/v2/cANvWkbPj4YVMamvJ6oumU17g3aMgpkB',
       chainId: 137,
       gasPrice: 50000000000,
+      live: true,
       ...defaultConfig
     },
     mumbai: {
@@ -56,9 +57,26 @@ const config: HardhatUserConfig = {
       },
       chainId: 1337,
     },
+    mainnet: {
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      chainId: 1,
+      live: true,
+      ...defaultConfig
+    },
+    kovan: {
+      url: `https://kovan.infura.io/v3/e687cba7b033449abeb865f24ef82f83`,
+      chainId: 42,
+      ...defaultConfig
+    },
   },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY,
+  },
+  namedAccounts: {
+    deployer: 0,
+    testAccount: 1,
+    rewardTreasury: 2,
+    
   },
   mocha: {
     timeout: "1000000s"
