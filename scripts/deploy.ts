@@ -5,6 +5,15 @@ import { deployProxy } from "../helper/deployer";
 
 async function main() {
   // see https://paycer.gitbook.io/paycer/paycer-token/smart-contracts
+
+  /**
+   * Private Sale: 0xfd7EC62C0d20C799b01E3D61EC53A2780893fc10
+     Pre-Sale: 0x35D186198D8429f2ED678bE7C6158f974e7c7BBd
+     Public Sale: 0xB3e2b6a260B967aCa2875d687eb7099Cd04537DE
+     Team Token: 0x4702f9794d0B8DEDD55a488D8198a1781396BCE6
+     Adviosr & Partners: 0x5BEA0F4Bde4e200a6eA2872477Ac51B3Ff337a2A
+
+   */
   const paycer = "0xa9f31589E0a8c0b12068329736ed6385A8F77b62";
   const decimals = 18;
   const totalSupply = ethers.utils.parseUnits('750000000', decimals);

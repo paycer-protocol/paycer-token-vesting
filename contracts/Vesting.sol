@@ -70,6 +70,11 @@ contract Vesting is Initializable, OwnableUpgradeable {
     /// @notice Vesting token of the project.
     address public vestingToken;
 
+    uint256 private constant NOT_ENTERED = 1;
+    uint256 private constant ENTERED = 2;
+
+    uint256 private enteredStatus;
+
     /*************************** Status Info *************************/
 
     /// @notice Sum of all user's vesting amount
@@ -111,6 +116,7 @@ contract Vesting is Initializable, OwnableUpgradeable {
         releaseRate = _params.releaseRate;
         lockPeriod = _params.lockPeriod;
         vestingPeriod = _params.vestingPeriod;
+        enteredStatus = NOT_ENTERED;
     }
 
     /**
@@ -182,13 +188,8 @@ contract Vesting is Initializable, OwnableUpgradeable {
     /**
      * @notice Withdraw tokens when vesting is ended
      * @dev Anyone can claim their tokens
-     * Warning: Take care of re-entrancy attack here.
-     * Vesting tokens are from not our own, which means
-     * re-entrancy can happen when the transfer happens.
-     * For now, we do checks-effects-interactions, but
-     * for absolute safety, we may use reentracny guard.
      */
-    function withdraw() external {
+    function withdraw() external nonReentrant {
         VestingInfo storage vestingInfo = recipients[msg.sender];
         if (vestingInfo.totalAmount == 0) return;
 
@@ -249,5 +250,26 @@ contract Vesting is Initializable, OwnableUpgradeable {
         uint256 vestedAmount = vested(beneficiary);
         uint256 withdrawnAmount = recipients[beneficiary].amountWithdrawn;
         return vestedAmount - withdrawnAmount;
+    }
+
+    /**
+     * @dev Prevents a contract from calling itself, directly or indirectly.
+     * Calling a `nonReentrant` function from another `nonReentrant`
+     * function is not supported. It is possible to prevent this from happening
+     * by making the `nonReentrant` function external, and making it call a
+     * `private` function that does the actual work.
+     */
+    modifier nonReentrant() {
+        // On the first call to nonReentrant, _notEntered will be true
+        require(enteredStatus != ENTERED, "ReentrancyGuard: reentrant call");
+
+        // Any calls to nonReentrant after this point will fail
+        enteredStatus = ENTERED;
+
+        _;
+
+        // By storing the original value once again, a refund is triggered (see
+        // https://eips.ethereum.org/EIPS/eip-2200)
+        enteredStatus = NOT_ENTERED;
     }
 }

@@ -57,17 +57,6 @@ const config: HardhatUserConfig = {
       },
       chainId: 1337,
     },
-    mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      chainId: 1,
-      live: true,
-      ...defaultConfig
-    },
-    kovan: {
-      url: `https://kovan.infura.io/v3/e687cba7b033449abeb865f24ef82f83`,
-      chainId: 42,
-      ...defaultConfig
-    },
   },
   etherscan: {
     apiKey: ETHERSCAN_API_KEY,

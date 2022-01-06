@@ -1,24 +1,33 @@
 import { DeployFunction } from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { ethers } from 'hardhat';
 import { Vesting } from '../typechain';
 import { duration } from '../helper/utils';
-import { deployProxy } from '../helper/deployer';
+import { deployProxyFromNamedAccounts } from '../helper/deployer';
 
+// see https://paycer.gitbook.io/paycer/paycer-token/smart-contracts
+const TokenAddress: any = {
+    137: '0xa6083abe845fbB8649d98B8586cBF50b7f233612', // matic mainnet
+    80001: '0xD8eA7F7D3eebB5193AE76E3280b8650FD1468663', // mumbai
+}
 
-const func: DeployFunction = async function () {
-  // see https://paycer.gitbook.io/paycer/paycer-token/smart-contracts
-  const paycerTokenAddress = '0xa9f31589E0a8c0b12068329736ed6385A8F77b62';
+const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  const { getChainId } = hre
+  const chainId = await getChainId()
+  const paycerTokenAddress = TokenAddress[chainId]
+
+  if (!paycerTokenAddress) {
+    throw Error('No address found!');
+  }
 
   const decimals = 18;
-  const totalSupply = ethers.utils.parseUnits('750000000', decimals);
   const rateAccuracy = ethers.utils.parseUnits('1', 10);
-
   const releaseInterval = 60 * 24 * 24; // 24 hours;
   const lockPeriod = 60 * 24 * 24; // 24 hours;
 
   const privateSaleVestingParams = {
       vestingName: 'Private Sale',
-      amountToBeVested: totalSupply.mul(7).div(100), // 7%
+      amountToBeVested: ethers.utils.parseUnits('34661123', decimals),
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
       releaseInterval,
@@ -28,7 +37,7 @@ const func: DeployFunction = async function () {
 
   const presaleVestingParams = {
       vestingName: 'Pre-Sale',
-      amountToBeVested: totalSupply.mul(4).div(100), // 4%
+      amountToBeVested: ethers.utils.parseUnits('3167142', decimals),
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
       releaseInterval,
@@ -38,7 +47,7 @@ const func: DeployFunction = async function () {
 
   const publicSaleVestingParams = {
       vestingName: 'Public Sale',
-      amountToBeVested: totalSupply.mul(5).div(100), // 5%
+      amountToBeVested: ethers.utils.parseUnits('17109091', decimals),
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(180),
       releaseInterval,
@@ -48,7 +57,7 @@ const func: DeployFunction = async function () {
 
   const teamTokenVestingParams = {
       vestingName: 'Team Token',
-      amountToBeVested: totalSupply.mul(10).div(100), // 10%
+      amountToBeVested: ethers.utils.parseUnits('75000000', decimals),
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
       releaseInterval,
@@ -58,7 +67,7 @@ const func: DeployFunction = async function () {
 
   const advisorVestingParmas = {
       vestingName: 'Advisor and Partners',
-      amountToBeVested: totalSupply.mul(3).div(100), // 3%
+      amountToBeVested: ethers.utils.parseUnits('25375000', decimals),
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
       releaseInterval,
@@ -66,11 +75,35 @@ const func: DeployFunction = async function () {
       vestingPeriod: duration.days(1080) // 36 months
   }
 
-  const privateSaleVesting = <Vesting>await deployProxy('Vesting', paycerTokenAddress, privateSaleVestingParams);
-  const preSaleVesting = <Vesting>await deployProxy('Vesting', paycerTokenAddress, presaleVestingParams);
-  const publicSaleVesting = <Vesting>await deployProxy('Vesting', paycerTokenAddress, publicSaleVestingParams);
-  const teamVesting = <Vesting>await deployProxy('Vesting', paycerTokenAddress, teamTokenVestingParams);
-  const advisorVesting = <Vesting>await deployProxy('Vesting', paycerTokenAddress, advisorVestingParmas);
+  const privateSaleVesting = <Vesting>await deployProxyFromNamedAccounts(
+      'PrivateSaleVesting', 
+      'Vesting', 
+      [paycerTokenAddress, privateSaleVestingParams], 
+  );
+
+  const preSaleVesting = <Vesting>await deployProxyFromNamedAccounts(
+      'PreSaleVesting', 
+      'Vesting',
+      [paycerTokenAddress, presaleVestingParams]
+  );
+
+  const publicSaleVesting = <Vesting>await deployProxyFromNamedAccounts(
+      'PublicSaleVesting', 
+      'Vesting',
+      [paycerTokenAddress, publicSaleVestingParams]
+  );
+
+  const teamVesting = <Vesting>await deployProxyFromNamedAccounts(
+      'TeamVesting', 
+      'Vesting',
+      [paycerTokenAddress, teamTokenVestingParams]
+  );
+  
+  const advisorVesting = <Vesting>await deployProxyFromNamedAccounts(
+      'AdvisorVesting', 
+      'Vesting', 
+      [paycerTokenAddress, advisorVestingParmas]
+  );
 
   console.log('Private Sale:', privateSaleVesting.address);
   console.log('Pre-Sale:', preSaleVesting.address);
