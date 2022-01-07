@@ -18,10 +18,10 @@ describe('Vesting', () => {
     vestingName: "Marketing",
     amountToBeVested: totalAmount,
     initialUnlock: 1000000000, // 10%
-    releaseInterval: 60, // 1 min
+    releaseInterval: 60 * 24 * 24 , // 24 hours
     releaseRate: 23150, // release 10% every month
-    lockPeriod: 60, // 1min
-    vestingPeriod: 86400 * 30 * 8 // 8 month
+    lockPeriod: 60 * 24 * 24, // 24 hours
+    vestingPeriod: 86400 * 30 * 12 // 12 month
   }
 
   let vesting: Vesting;

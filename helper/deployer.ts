@@ -32,4 +32,28 @@ async function deployProxy(
   return contract;
 }
 
-export { verifyContract, deployContract, deployProxy };
+
+async function deployProxyFromNamedAccounts(
+  deploymentName: string,
+  contractName: ContractName,
+  ...constructorArgs: any[]
+): Promise<any> {
+  const { deployments, getNamedAccounts } = hre
+  const { deploy } = deployments
+  const { deployer } = await getNamedAccounts();
+
+  const contract = await deploy(deploymentName, {
+    contract: contractName,
+    from: deployer,
+    args: constructorArgs,
+    log: true,
+    proxy: {
+      owner: deployer,
+      proxyContract: 'OpenZeppelinTransparentProxy'
+    }
+  })
+
+  return contract;
+}
+
+export { verifyContract, deployContract, deployProxy, deployProxyFromNamedAccounts };
