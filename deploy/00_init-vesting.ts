@@ -14,7 +14,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       tokenDeployment.address
   )
 
-  const config = vestingTypes.mumbai
+  const config = vestingTypes.matic
 
   /**
    * Pre mints token to vesting contract address

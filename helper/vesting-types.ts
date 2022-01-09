@@ -36,23 +36,23 @@ const vestingTypes: VestingTypes = {
     },
     matic: {
         privateSale: {
-            address: 'todo',
+            address: '0x7Fd3DA382bcF1C1d66813E3a8d1b12eE56368618',
             amount: utils.parseUnits('37742441', 18)
         },
         preSale: {
-            address: 'todo',
+            address: '0xfd7EC62C0d20C799b01E3D61EC53A2780893fc10',
             amount: utils.parseUnits('3182143', 18)
         },
         publicSale: {
-            address: 'todo',
+            address: '0x35D186198D8429f2ED678bE7C6158f974e7c7BBd',
             amount: utils.parseUnits('9490909', 18)
         },
         team: {
-            address: 'todo',
+            address: '0xB3e2b6a260B967aCa2875d687eb7099Cd04537DE',
             amount: utils.parseUnits('8656000', 18)
         },
         advisor: {
-            address: 'todo',
+            address: '0x4702f9794d0B8DEDD55a488D8198a1781396BCE6',
             amount: utils.parseUnits('4250000', 18)
         },
     }

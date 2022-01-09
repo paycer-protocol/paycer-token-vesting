@@ -15,7 +15,7 @@ const fs = require('fs')
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments } = hre
   const vestingDeployment = await deployments.get('Vesting')
-  const config = vestingTypes.mumbai
+  const config = vestingTypes.matic
 
   const privateSaleContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,

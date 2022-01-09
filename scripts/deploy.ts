@@ -25,8 +25,8 @@ async function main() {
       amountToBeVested: config.privateSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
-      dailyReleaseInterval,
-      dailyLockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(365) // 12 months
   }
 
@@ -35,8 +35,8 @@ async function main() {
       amountToBeVested: config.preSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
-      dailyReleaseInterval,
-      dailyLockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(365) // 12 months
   }
 
@@ -45,8 +45,8 @@ async function main() {
       amountToBeVested: config.publicSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(6),
-      monthlyReleaseInterval,
-      monthlyLockPeriod,
+      releaseInterval: monthlyReleaseInterval,
+      lockPeriod: monthlyLockPeriod,
       vestingPeriod: duration.days(180) // 6 months
   }
 
@@ -55,8 +55,8 @@ async function main() {
       amountToBeVested: config.team.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
-      dailyReleaseInterval,
-      dailyLockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(1080) // 36 months
   }
 
@@ -65,8 +65,8 @@ async function main() {
       amountToBeVested: config.advisor.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
-      dailyReleaseInterval,
-      dailyLockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(1080) // 36 months
   }
 
