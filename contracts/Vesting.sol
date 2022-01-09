@@ -176,8 +176,6 @@ contract Vesting is Initializable, OwnableUpgradeable {
      * @param newStartTime New start time
      */
     function setStartTime(uint256 newStartTime) external onlyOwner {
-        // Only allow to change start time before the counting starts
-        require(startTime == 0 || startTime >= block.timestamp, "setStartTime: Already started");
         require(newStartTime > block.timestamp, "setStartTime: Should be time in future");
 
         startTime = newStartTime;

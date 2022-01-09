@@ -1,7 +1,8 @@
-import { ethers, network } from "hardhat";
+import { ethers } from "hardhat";
 import { Vesting } from "../typechain";
 import { duration } from "../helper/utils";
 import { deployProxy } from "../helper/deployer";
+import vestingTypes from '../helper/vesting-types'
 
 // see https://paycer.gitbook.io/paycer/paycer-token/smart-contracts
 const TokenAddress: any = {
@@ -10,59 +11,62 @@ const TokenAddress: any = {
 }
 
 async function main() {
-  const paycerTokenAddress = network.live ? TokenAddress.matic : TokenAddress.mumbai 
-  const decimals = 18;
+  const paycerTokenAddress = TokenAddress.matic;
+  const config = vestingTypes.matic
+
   const rateAccuracy = ethers.utils.parseUnits('1', 10);
-  const releaseInterval = 60 * 24 * 24; // 24 hours;
-  const lockPeriod = 60 * 24 * 24; // 24 hours;
+  const dailyReleaseInterval = 24 * 60 * 60; // 1 day;
+  const dailyLockPeriod = 24 * 60 * 60; // 1 day;
+  const monthlyReleaseInterval = 30 * 24 * 60 * 60; // 1 month;
+  const monthlyLockPeriod = 30 * 24 * 60 * 60; // 1 month;
 
   const privateSaleVestingParams = {
       vestingName: 'Private Sale',
-      amountToBeVested: ethers.utils.parseUnits('34661123', decimals),
+      amountToBeVested: config.privateSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
-      releaseInterval,
-      lockPeriod,
-      vestingPeriod: duration.days(365)
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
+      vestingPeriod: duration.days(365) // 12 months
   }
 
   const presaleVestingParams = {
       vestingName: 'Pre-Sale',
-      amountToBeVested: ethers.utils.parseUnits('3167142', decimals),
+      amountToBeVested: config.preSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
-      releaseInterval,
-      lockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(365) // 12 months
   }
 
   const publicSaleVestingParams = {
       vestingName: 'Public Sale',
-      amountToBeVested: ethers.utils.parseUnits('17109091', decimals),
+      amountToBeVested: config.publicSale.amount,
       initialUnlock: 0,
-      releaseRate: rateAccuracy.div(180),
-      releaseInterval,
-      lockPeriod,
+      releaseRate: rateAccuracy.div(6),
+      releaseInterval: monthlyReleaseInterval,
+      lockPeriod: monthlyLockPeriod,
       vestingPeriod: duration.days(180) // 6 months
   }
 
   const teamTokenVestingParams = {
       vestingName: 'Team Token',
-      amountToBeVested: ethers.utils.parseUnits('75000000', decimals),
+      amountToBeVested: config.team.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
-      releaseInterval,
-      lockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(1080) // 36 months
   }
 
   const advisorVestingParmas = {
       vestingName: 'Advisor and Partners',
-      amountToBeVested: ethers.utils.parseUnits('25375000', decimals),
+      amountToBeVested: config.advisor.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
-      releaseInterval,
-      lockPeriod,
+      releaseInterval: dailyReleaseInterval,
+      lockPeriod: dailyLockPeriod,
       vestingPeriod: duration.days(1080) // 36 months
   }
 
