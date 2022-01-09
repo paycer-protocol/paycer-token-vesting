@@ -63,9 +63,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     );
   }
 
-  // await importParticipants('private', privteSaleData, privateSaleContract)
-  // await importParticipants('pre', preSaleData, preSaleContract)
-  // await importParticipants('public', publicSaleData, publicSaleContract)
+  await importParticipants('private', privteSaleData, privateSaleContract)
+  await importParticipants('pre', preSaleData, preSaleContract)
+  await importParticipants('public', publicSaleData, publicSaleContract)
   await importParticipants('team', teamData, teamContract)
   await importParticipants('advisor', advisorData, advisorContract)
 }
