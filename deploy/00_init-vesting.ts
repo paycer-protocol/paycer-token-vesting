@@ -6,8 +6,7 @@ import vestingTypes, { VestingType } from '../helper/vesting-types'
 
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { deployments, getNamedAccounts } = hre
-  const { deployer } = await getNamedAccounts()
+  const { deployments } = hre
   const tokenDeployment = await deployments.get('PaycerToken')
 
   const tokenContract = await ethers.getContractAt(
@@ -15,7 +14,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       tokenDeployment.address
   )
 
-  tokenContract.attach(deployer)
+  const config = vestingTypes.mumbai
 
   /**
    * Pre mints token to vesting contract address
@@ -49,26 +48,25 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log('Scheduled vesting time', startTime)
   }
 
-
   console.log('Initialize Vesting - Private Sale')
-  await preMintTokensToContract(vestingTypes.privateSale)
-  await scheduleVestingStartTime(vestingTypes.privateSale)
+  await preMintTokensToContract(config.privateSale)
+  await scheduleVestingStartTime(config.privateSale)
 
   console.log('Initialize Vesting - Pre Sale')
-  await preMintTokensToContract(vestingTypes.preSale)
-  await scheduleVestingStartTime(vestingTypes.preSale)
+  await preMintTokensToContract(config.preSale)
+  await scheduleVestingStartTime(config.preSale)
 
   console.log('Initialize Vesting - Public Sale')
-  await preMintTokensToContract(vestingTypes.publicSale)
-  await scheduleVestingStartTime(vestingTypes.publicSale)
+  await preMintTokensToContract(config.publicSale)
+  await scheduleVestingStartTime(config.publicSale)
 
   console.log('Initialize Vesting - Team')
-  await preMintTokensToContract(vestingTypes.team)
-  await scheduleVestingStartTime(vestingTypes.team)
+  await preMintTokensToContract(config.team)
+  await scheduleVestingStartTime(config.team)
 
   console.log('Initialize Vesting - Adviosr & Partner')
-  await preMintTokensToContract(vestingTypes.advisor)
-  await scheduleVestingStartTime(vestingTypes.advisor)
+  await preMintTokensToContract(config.advisor)
+  await scheduleVestingStartTime(config.advisor)
 }
 
 export default func

@@ -15,30 +15,31 @@ const fs = require('fs')
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments } = hre
   const vestingDeployment = await deployments.get('Vesting')
+  const config = vestingTypes.mumbai
 
   const privateSaleContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,
-    vestingTypes.privateSale.address
+    config.privateSale.address
   )
   
   const preSaleContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,
-    vestingTypes.preSale.address
+    config.preSale.address
   )
 
   const publicSaleContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,
-    vestingTypes.publicSale.address
+    config.publicSale.address
   )
 
   const teamContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,
-    vestingTypes.team.address
+    config.team.address
   )
 
   const advisorContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,
-    vestingTypes.advisor.address
+    config.advisor.address
   )
 
   async function importParticipants(name: string, data: any, contract: Vesting) {

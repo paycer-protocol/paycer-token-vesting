@@ -12,57 +12,61 @@ const TokenAddress: any = {
 
 async function main() {
   const paycerTokenAddress = TokenAddress.matic;
+  const config = vestingTypes.matic
+
   const rateAccuracy = ethers.utils.parseUnits('1', 10);
-  const releaseInterval = 24 * 60 * 60; // 1 day;
-  const lockPeriod = 24 * 60 * 60; // 1 day;
+  const dailyReleaseInterval = 24 * 60 * 60; // 1 day;
+  const dailyLockPeriod = 24 * 60 * 60; // 1 day;
+  const monthlyReleaseInterval = 30 * 24 * 60 * 60; // 1 month;
+  const monthlyLockPeriod = 30 * 24 * 60 * 60; // 1 month;
 
   const privateSaleVestingParams = {
       vestingName: 'Private Sale',
-      amountToBeVested: vestingTypes.privateSale.amount,
+      amountToBeVested: config.privateSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
-      releaseInterval,
-      lockPeriod,
+      dailyReleaseInterval,
+      dailyLockPeriod,
       vestingPeriod: duration.days(365) // 12 months
   }
 
   const presaleVestingParams = {
       vestingName: 'Pre-Sale',
-      amountToBeVested: vestingTypes.preSale.amount,
+      amountToBeVested: config.preSale.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(365),
-      releaseInterval,
-      lockPeriod,
+      dailyReleaseInterval,
+      dailyLockPeriod,
       vestingPeriod: duration.days(365) // 12 months
   }
 
   const publicSaleVestingParams = {
       vestingName: 'Public Sale',
-      amountToBeVested: vestingTypes.publicSale.amount,
+      amountToBeVested: config.publicSale.amount,
       initialUnlock: 0,
-      releaseRate: rateAccuracy.div(180),
-      releaseInterval,
-      lockPeriod,
+      releaseRate: rateAccuracy.div(6),
+      monthlyReleaseInterval,
+      monthlyLockPeriod,
       vestingPeriod: duration.days(180) // 6 months
   }
 
   const teamTokenVestingParams = {
       vestingName: 'Team Token',
-      amountToBeVested: vestingTypes.team.amount,
+      amountToBeVested: config.team.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
-      releaseInterval,
-      lockPeriod,
+      dailyReleaseInterval,
+      dailyLockPeriod,
       vestingPeriod: duration.days(1080) // 36 months
   }
 
   const advisorVestingParmas = {
       vestingName: 'Advisor and Partners',
-      amountToBeVested: vestingTypes.advisor.amount,
+      amountToBeVested: config.advisor.amount,
       initialUnlock: 0,
       releaseRate: rateAccuracy.div(1080),
-      releaseInterval,
-      lockPeriod,
+      dailyReleaseInterval,
+      dailyLockPeriod,
       vestingPeriod: duration.days(1080) // 36 months
   }
 
