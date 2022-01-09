@@ -11,10 +11,10 @@ const TokenAddress: any = {
 }
 
 async function main() {
-  const paycerTokenAddress = TokenAddress.mumbai; // ########### AUFPASSEN
+  const paycerTokenAddress = TokenAddress.matic;
   const rateAccuracy = ethers.utils.parseUnits('1', 10);
-  const releaseInterval = 60; // 60 seconds;
-  const lockPeriod = 60; // 60 seconds;
+  const releaseInterval = 24 * 60 * 60; // 1 day;
+  const lockPeriod = 24 * 60 * 60; // 1 day;
 
   const privateSaleVestingParams = {
       vestingName: 'Private Sale',
