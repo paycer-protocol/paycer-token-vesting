@@ -42,14 +42,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       vestingDeployment.abi,
       vesting.address
     )
-
-    vestingContract.attach(deployer)
-
-    // Sat Jan 08 2022 01:00:00 GMT+0000
-    const startTime = '1641603600'
-    await vestingContract.setStartTime('1641603600')
-
-    console.log('Scheduled vesting time', new Date(startTime))
+    
+    // Sun Jan 09 2022 07:00:00 GMT+0000
+    const startTime = '1641711600'
+    await vestingContract.setStartTime(startTime)
+    console.log('Scheduled vesting time', startTime)
   }
 
 

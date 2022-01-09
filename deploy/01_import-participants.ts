@@ -2,10 +2,14 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { ethers } from 'hardhat'
 import { Vesting } from "../typechain"
-import vestingTypes, { VestingType } from '../helper/vesting-types'
+import vestingTypes from '../helper/vesting-types'
 import privteSaleData from '../data/token-sale/vesting-private.json'
 import preSaleData from '../data/token-sale/vesting-pre.json'
 import publicSaleData from '../data/token-sale/vesting-public.json'
+import teamData from '../data/token-sale/vesting-team.json'
+import advisorData from '../data/token-sale/vesting-advisor.json'
+
+const fs = require('fs')
 
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -27,7 +31,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     vestingTypes.publicSale.address
   )
 
-
   const teamContract = <Vesting>await ethers.getContractAt(
     vestingDeployment.abi,
     vestingTypes.team.address
@@ -38,39 +41,33 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     vestingTypes.advisor.address
   )
 
-
-  // Participants - Private sale 
-  for(let i = 0; i < privteSaleData.length; i++) {
-    let tx = await privateSaleContract.updateRecipient(
-      privteSaleData[i].walletAddress, 
-      ethers.utils.parseUnits(String(privteSaleData[i].amountPCR), 18)
-    )
+  async function importParticipants(name: string, data: any, contract: Vesting) {
+    const failedTransactions = []
+    for(let i = 0; i < data.length; i++) {
+      try {
+        let tx = await contract.updateRecipient(
+          data[i].walletAddress.split('@')[0], 
+          ethers.utils.parseUnits(String(data[i].amountPCR), 18)
+        )
   
-    tx.wait()
-    console.log(tx)
+        console.log(tx)
+      } catch (e) {
+        failedTransactions.push(data[i])
+        console.log('#############', e)
+      }
+    }
+  
+    fs.writeFileSync(
+      'data/token-sale/failed-vesting-' + name + '.json',  
+      JSON.stringify(failedTransactions)
+    );
   }
 
-  // Participants - Pre sale 
-  for(let i = 0; i < preSaleData.length; i++) {
-    let tx = await preSaleContract.updateRecipient(
-      preSaleData[i].walletAddress, 
-      ethers.utils.parseUnits(String(preSaleData[i].amountPCR), 18)
-    )
-  
-    tx.wait()
-    console.log(tx)
-  }
-
-  // Participants - Public sale 
-  for(let i = 0; i < publicSaleData.length; i++) {
-    let tx = await publicSaleContract.updateRecipient(
-      publicSaleData[i].walletAddress, 
-      ethers.utils.parseUnits(String(publicSaleData[i].amountPCR), 18)
-    )
-  
-    tx.wait()
-    console.log(tx)
-  }
+  // await importParticipants('private', privteSaleData, privateSaleContract)
+  // await importParticipants('pre', preSaleData, preSaleContract)
+  // await importParticipants('public', publicSaleData, publicSaleContract)
+  await importParticipants('team', teamData, teamContract)
+  await importParticipants('advisor', advisorData, advisorContract)
 }
 
 export default func
