@@ -7,7 +7,16 @@ import vestingTypes, { VestingType } from '../helper/vesting-types'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments } = hre
-  const tokenDeployment = await deployments.get('PaycerToken')
+
+  const { getNamedAccounts } = hre
+  const { deploy, get } = deployments
+  const { deployer } = await getNamedAccounts();
+  const tokenDeployment = await deploy('CustomToken', {
+    from: deployer,
+    args: ['Paycer', 'PCR', 100000000000000],
+    log: true,
+  });
+  //const tokenDeployment = await deployments.get('PaycerToken')
 
   const tokenContract = await ethers.getContractAt(
       tokenDeployment.abi,
@@ -24,7 +33,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   async function preMintTokensToContract(vesting: VestingType) {
     const tokenBalance = await tokenContract.balanceOf(vesting.address)
     if (tokenBalance.isZero()) {
-        await tokenContract.mint(vesting.address, vesting.amount)
+        await tokenContract.transfer(vesting.address, vesting.amount)
         console.log('Tokens minted', vesting, tokenBalance)
     } else {
         console.log('Mint tokens failed', vesting, tokenBalance)

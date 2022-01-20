@@ -13,6 +13,7 @@
     "coverage": "npm run build && npx hardhat coverage --temp artifacts --solcoverjs ./.solcover.ts"
   },
   "dependencies": {
+    "@chainlink/contracts": "^0.3.1",
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-etherscan": "^2.1.4",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
